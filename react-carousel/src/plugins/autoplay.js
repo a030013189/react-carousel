@@ -4,8 +4,6 @@ import { useSetRecoilState } from 'recoil';
 import { pluginNames } from '../constants/plugins';
 import { getCurrentValueSelector } from '../state/selectors/carouselSelectors';
 
-let interval = null;
-
 const DIRECTION = {
   LEFT: 'LEFT',
   RIGHT: 'RIGHT',
@@ -35,11 +33,14 @@ const autoplay = ({ carouselProps, options = {} }) => {
       const changeSlide = useSetRecoilState(getCurrentValueSelector);
       const [autoPlayStopped, setAutoPlayStopped] = useState(false);
 
+     const interval = useRef(null);
+
+
       const resetInterval = () => {
-        if (interval) {
+        if (interval.current) {
           clearInterval(interval);
         }
-        interval = setInterval(() => {
+        interval.current = setInterval(() => {
           if (!document.hidden && !autoPlayStopped) {
             changeSlide(
               carouselProps.value +
